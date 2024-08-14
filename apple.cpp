@@ -12,6 +12,7 @@ module;
 module jup;
 import hai;
 import silog;
+import traits;
 
 struct deleter {
   void operator()(AudioComponentInstance i) {
@@ -21,8 +22,14 @@ struct deleter {
   }
 };
 
+static hai::array<float> g_buffer {};
+static int g_frame;
 static OSStatus render(void * /*ref*/, AudioUnitRenderActionFlags * /*flags*/, const AudioTimeStamp * /*timestamp*/,
                        UInt32 /*bus_number*/, UInt32 number_frames, AudioBufferList * data) {
+  auto * f_data = static_cast<float *>(data->mBuffers[0].mData);
+  for (auto i = 0; i < number_frames; i++, f_data++) {
+    *f_data = (g_frame >= g_buffer.size()) ? 0 : g_buffer[g_frame++];
+  }
   return noErr;
 }
 
@@ -65,10 +72,18 @@ static AudioComponentInstance create_ci() {
 
   if (AudioUnitInitialize(tone_unit) != noErr) return err("could not initialise audio unit");
 
+  if (AudioOutputUnitStart(tone_unit) != noErr) return err("could not start audio unit");
+
   silog::log(silog::info, "AudioToolbox initialised");
   return tone_unit;
 }
 
 void jup::play(float * samples, unsigned size) {
   static hai::value_holder<AudioComponentInstance, deleter> ci { create_ci() };
+  if (!*ci) return;
+
+  hai::array<float> next { size };
+  for (auto i = 0; i < size; i++) next[i] = samples[i];
+  g_buffer = traits::move(next);
+  g_frame = 0;
 }
