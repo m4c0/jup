@@ -1,14 +1,10 @@
 #pragma leco app
 
 import casein;
+import jup;
 import silog;
 
 extern "C" float sinf(float);
-
-namespace jup {
-  // Plays a mono sample at 44100Hz
-  void play(float * samples, int size) {}
-} // namespace jup
 
 static void play() {
   silog::log(silog::debug, "playing tune");
