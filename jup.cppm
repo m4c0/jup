@@ -3,6 +3,8 @@ export module jup;
 namespace jup {
   // Plays a mono sample at 44100Hz
   export void play(float * samples, unsigned size);
+
+  export constexpr const auto rate = 44100;
 } // namespace jup
 
 #ifdef LECO_TARGET_ANDROID
