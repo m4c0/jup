@@ -69,6 +69,6 @@ static AudioComponentInstance create_ci() {
   return tone_unit;
 }
 
-void jup::play(float * samples, int size) {
+void jup::play(float * samples, unsigned size) {
   static hai::value_holder<AudioComponentInstance, deleter> ci { create_ci() };
 }

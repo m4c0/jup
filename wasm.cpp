@@ -1,3 +1,3 @@
 module jup;
 
-void jup::play(float * samples, int size) {}
+void jup::play(float * samples, unsigned size) {}

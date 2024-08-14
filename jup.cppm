@@ -2,7 +2,7 @@ export module jup;
 
 namespace jup {
   // Plays a mono sample at 44100Hz
-  export void play(float * samples, int size);
+  export void play(float * samples, unsigned size);
 } // namespace jup
 
 #ifdef LECO_TARGET_ANDROID
